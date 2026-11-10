@@ -22,6 +22,12 @@ dependencies = [
   "websockets>=15,<16",
 ]
 
+[project.urls]
+Homepage = "https://leashbyte.com"
+Repository = "https://github.com/mangybyte/leashbyte"
+Issues = "https://github.com/mangybyte/leashbyte/issues"
+Changelog = "https://github.com/mangybyte/leashbyte/blob/main/CHANGELOG.md"
+
 [dependency-groups]
 dev = [
   "pytest>=9,<10",

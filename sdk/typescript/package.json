@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "TypeScript client for the LeashByte API",
   "license": "Apache-2.0",
+  "homepage": "https://leashbyte.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mangybyte/leashbyte.git",
+    "directory": "sdk/typescript"
+  },
+  "bugs": {
+    "url": "https://github.com/mangybyte/leashbyte/issues"
+  },
   "type": "module",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",

@@ -2,7 +2,7 @@
 
 LeashByte is a self-hosted toolkit that gives AI agents access to the web. It puts search, page fetching, real Chrome sessions, an encrypted credential vault and goal-driven agent runs behind one REST API, with an MCP server and Python and TypeScript SDKs on top. It's meant for developers who want their agents to search, read and use websites from their own machines, driven by a model they choose. A local model works fine.
 
-LeashByte is pre-alpha. Everything in this README runs from a source checkout with Docker Compose, but expect rough edges and breaking changes. The project site isn't live yet and the PyPI and npm packages haven't been published.
+LeashByte is pre-alpha. Everything in this README runs from a source checkout with Docker Compose, but expect rough edges and breaking changes. The PyPI and npm packages haven't been published yet.
 
 The project home is [leashbyte.com](https://leashbyte.com).
 

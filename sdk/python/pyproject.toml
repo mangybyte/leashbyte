@@ -12,6 +12,12 @@ dependencies = [
   "pydantic>=2.11,<3",
 ]
 
+[project.urls]
+Homepage = "https://leashbyte.com"
+Repository = "https://github.com/mangybyte/leashbyte"
+Issues = "https://github.com/mangybyte/leashbyte/issues"
+Changelog = "https://github.com/mangybyte/leashbyte/blob/main/CHANGELOG.md"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
