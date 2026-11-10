@@ -91,6 +91,8 @@ class BrowserSnapshotResponse(BaseModel):
     url: Annotated[str, Field(title="Url")]
     title: Annotated[str, Field(title="Title")]
     nodes: Annotated[list[BrowserNode], Field(title="Nodes")]
+    text: Annotated[str | None, Field(title="Text")] = ""
+    text_truncated: Annotated[bool | None, Field(title="Text Truncated")] = False
 
 
 class CancelRunRequest(BaseModel):

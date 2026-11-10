@@ -281,7 +281,17 @@ sudo ufw allow from 172.29.250.0/24 to 172.29.250.1 port 11434 proto tcp comment
 
 Change the port in the rule if you've changed `LEASHBYTE_LOCAL_MODEL_PORT`. The rule doesn't change the model's own listener, and other networks still can't reach the relay.
 
-Claude runs use `claude-haiku-5-5` through the official Anthropic SDK. Put an API key in a file outside the repository and point `LEASHBYTE_ANTHROPIC_API_KEY_HOST_FILE` at it, and Compose mounts it.
+Claude runs use `claude-haiku-5-5` through the official Anthropic SDK. Put an API key in a file outside the repository and point `LEASHBYTE_ANTHROPIC_API_KEY_HOST_FILE` at it, and Compose mounts it read-only at `/run/anthropic.key` in the agent worker.
+
+The worker runs as uid 10001 with every Linux capability dropped, and a bind mount keeps the host file's owner and mode. So a key file with mode `0600` that belongs to your own user can't be read inside the container. Give uid 10001 read access and keep everyone else out. On Linux, an ACL entry does that without changing the owner:
+
+```bash
+KEY_FILE=/path/to/anthropic.key
+chmod 600 "$KEY_FILE"
+setfacl -m u:10001:r--,g::--- "$KEY_FILE"
+```
+
+If you don't have `setfacl`, `sudo chown 10001 "$KEY_FILE"` with mode `0400` works too. When the worker can't read the key, it logs `Claude runs are unavailable` at start, and every Claude run fails with an error that names `LEASHBYTE_ANTHROPIC_API_KEY_FILE` and the reason, such as `Permission denied`.
 
 Create a run with fixed limits:
 

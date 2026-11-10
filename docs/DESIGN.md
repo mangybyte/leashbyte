@@ -161,10 +161,15 @@ The browser layer builds an accessibility snapshot and gives each actionable ele
 - The user's goal and the current run limits.
 - The current page origin and title.
 - A compact accessibility tree with numbered marks.
+- The visible text of the page, in reading order.
 - The last accepted actions and their results.
 - Credential aliases, when the page origin is allowed for them.
 
-The model doesn't get screenshots. A text-only local model has to be able to finish a run from the accessibility tree alone, and that is the case we design for.
+The page text is the rendered `innerText` of the document body, so it follows the layout and skips hidden elements. Text inside frames isn't included. We collapse runs of spaces and blank lines, then cut the text at 4,000 characters and set `text_truncated` when we cut it. The marked elements give the model something to act on, and the text gives it something to read: without the text, a model asked about a paragraph or a price only sees link and button names, and it will either give up or guess. The system prompt tells it to answer only from the observation and to fail when the answer isn't there.
+
+The page script reads up to 100,000 characters, and we redact secret values from that before the 4,000 character cut, the same way as element names. If the script had to cut the text, a secret could sit across that first cut where redaction can't match it, so we also drop a tail as long as the longest form of any secret. The text counts toward the run's token budget like the rest of the observation, and it is stored with each step's observation in the run record.
+
+The model doesn't get screenshots. A text-only local model has to be able to finish a run from the accessibility tree and the page text alone, and that is the case we design for.
 
 Page text is untrusted. The prompt marks it as data, and it never becomes a system instruction.
 

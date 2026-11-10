@@ -98,6 +98,8 @@ class BrowserSnapshotResponse(BaseModel):
     url: str
     title: str
     nodes: list[BrowserNode]
+    text: str = ""
+    text_truncated: bool = False
 
 
 class CdpGrantResponse(BaseModel):

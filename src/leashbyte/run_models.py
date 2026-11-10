@@ -88,6 +88,20 @@ class AgentAction(BaseModel):
     result: str | None = Field(default=None, max_length=4000)
     reason: str | None = Field(default=None, max_length=1000)
 
+    @field_validator("wait_ms", "x", "y", mode="before")
+    @classmethod
+    def clamp_harmless_numbers(cls, value, info):
+        """Clamp waits and scroll offsets.
+
+        The Claude schema cannot carry numeric bounds, so a model may ask for a longer
+        wait or a larger scroll than we allow. Clamping these is safe: they only change
+        how long we pause or how far we scroll.
+        """
+        if isinstance(value, int) and not isinstance(value, bool):
+            low, high = (50, 2000) if info.field_name == "wait_ms" else (-10_000, 10_000)
+            return min(high, max(low, value))
+        return value
+
     @model_validator(mode="after")
     def secret_placeholder_compatibility(self) -> "AgentAction":
         if (

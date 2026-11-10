@@ -146,11 +146,11 @@ class AgentWorker:
 
     def model_for(self, run: dict):
         if run["provider"] == "anthropic":
-            return ClaudeModel(
-                self.settings.require_anthropic_api_key(),
-                run["model"],
-                self.settings.model_timeout_seconds,
-            )
+            try:
+                api_key = self.settings.require_anthropic_api_key()
+            except RuntimeError as error:
+                raise LeashByteError(503, "model_key_unavailable", str(error)[:300]) from error
+            return ClaudeModel(api_key, run["model"], self.settings.model_timeout_seconds)
         return LocalModel(
             self.settings.local_model_base_url,
             run["model"],
@@ -188,6 +188,8 @@ class AgentWorker:
             "url": raw["url"],
             "title": raw["title"],
             "nodes": raw["nodes"],
+            "text": raw.get("text", ""),
+            "text_truncated": raw.get("text_truncated", False),
             "credential_placeholders": placeholders,
         }
 
@@ -444,7 +446,15 @@ class AgentWorker:
                 policy["limits"]["artifact_bytes"],
             )
 
+    def report_claude_key(self) -> None:
+        """Say at start when Claude runs cannot work, so the fault is not a surprise later."""
+        try:
+            self.settings.require_anthropic_api_key()
+        except RuntimeError as error:
+            logger.warning("Claude runs are unavailable: %s", error)
+
     async def run(self) -> None:
+        self.report_claude_key()
         await self.store.initialize()
         pool = await self.store.connect()
         async with pool.acquire() as connection:

@@ -4,15 +4,23 @@ import asyncio
 import json
 import time
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from fastapi.testclient import TestClient
 
 from leashbyte.agent_worker import AgentWorker, validate_action
+from leashbyte.browser import PAGE_TEXT_LIMIT, PAGE_TEXT_SCAN_LIMIT, BrowserPool
 from leashbyte.config import Settings
 from leashbyte.errors import LeashByteError
 from leashbyte.main import create_app
-from leashbyte.model_adapter import ClaudeModel, LocalModel, observation_message
+from leashbyte.model_adapter import (
+    CLAUDE_ACTION_SCHEMA,
+    ClaudeModel,
+    LocalModel,
+    observation_message,
+    parse_action_text,
+)
 from leashbyte.model_relay import source_allowed
 from leashbyte.run_models import AgentAction, RunCreateRequest
 from leashbyte.run_store import ArtifactStore
@@ -326,8 +334,9 @@ def test_claude_schema_omits_unsupported_constraints() -> None:
     claude_keys = {key for node in nodes(claude_schema) for key in node}
     assert {"minimum", "maximum", "maxLength", "maxItems"} <= local_keys
     assert claude_keys.isdisjoint(unsupported)
+    assert AgentAction(action="wait", snapshot_id="snapshot-1", wait_ms=1).wait_ms == 50
     with pytest.raises(ValueError):
-        AgentAction(action="wait", snapshot_id="snapshot-1", wait_ms=1)
+        AgentAction(action="click", snapshot_id="snapshot-1", mark=201)
     with pytest.raises(ValueError):
         AgentAction(action="done", snapshot_id="short")
 
@@ -341,3 +350,81 @@ def test_claude_run_model_is_fixed() -> None:
             provider="anthropic",
             model="unapproved-model",
         )
+
+
+class TextPage:
+    """A page double that returns visible text the way the page script does."""
+
+    def __init__(self, text: str) -> None:
+        self.text = text
+        self.url = f"https://fixture.internal/?token={SECRET}"
+
+    async def query_selector_all(self, selector: str) -> list:
+        return []
+
+    async def evaluate(self, script: str, limit: int) -> dict:
+        assert limit == PAGE_TEXT_SCAN_LIMIT
+        return {"text": self.text[:limit], "cut": len(self.text) > limit}
+
+    async def title(self) -> str:
+        return f"Account {SECRET}"
+
+
+async def text_snapshot(text: str) -> dict:
+    session = SimpleNamespace(
+        id="session",
+        context=SimpleNamespace(pages=[TextPage(text)]),
+        redactions=[SECRET],
+        marks={},
+        latest_snapshot="",
+    )
+    pool = SimpleNamespace(redact=BrowserPool.redact, bounded_redact=BrowserPool.bounded_redact)
+    return await BrowserPool.snapshot(pool, session)
+
+
+async def test_page_text_is_redacted_bounded_and_counted() -> None:
+    small = await text_snapshot(f"First quote\nAuthor {SECRET} wrote it.")
+    assert small["text"] == "First quote\nAuthor [redacted] wrote it."
+    assert small["text_truncated"] is False
+    assert SECRET not in json.dumps(small)
+
+    large = await text_snapshot(("quote " * 100) + SECRET + ("tail " * 30_000))
+    assert len(large["text"]) == PAGE_TEXT_LIMIT
+    assert large["text_truncated"] is True
+    assert SECRET not in large["text"]
+
+    # A secret that crosses the page script's scan cut is only partly present.
+    session = SimpleNamespace(redactions=[SECRET])
+    cut, truncated = BrowserPool.bounded_redact(session, "visible " + SECRET[:12], True, 1000)
+    assert SECRET[:12] not in cut
+    assert truncated is True
+
+    without_text = {"goal": "Complete the controlled goal.", "text": ""}
+    with_text = {**without_text, "text": large["text"]}
+    assert AgentWorker.output_token_allowance(with_text, 3000) < AgentWorker.output_token_allowance(
+        without_text, 3000
+    )
+
+
+def test_invalid_model_action_keeps_the_fault_type_only() -> None:
+    # Claude gets no numeric bounds, so a long wait fits the sent schema.
+    wait_schema = CLAUDE_ACTION_SCHEMA["properties"]["wait_ms"]
+    assert "maximum" not in wait_schema
+    assert "maximum 2000" in wait_schema["description"]
+    long_wait = parse_action_text('{"action":"wait","snapshot_id":"snapshot-1","wait_ms":5000}')
+    assert long_wait.wait_ms == 2000
+
+    reply = json.dumps(
+        {"action": "done", "snapshot_id": "snapshot-1", "result": "r" * 4001, SECRET: SECRET}
+    )
+    with pytest.raises(LeashByteError) as invalid:
+        parse_action_text(reply)
+    assert invalid.value.code == "invalid_model_action"
+    assert "string_too_long at result" in invalid.value.message
+    assert "extra_forbidden at unknown_field" in invalid.value.message
+    assert SECRET not in invalid.value.message
+    assert "rrrr" not in invalid.value.message
+
+    with pytest.raises(LeashByteError) as truncated:
+        parse_action_text('{"action":"done","result":"cut', "max_tokens")
+    assert "json_invalid, stop reason max_tokens" in truncated.value.message

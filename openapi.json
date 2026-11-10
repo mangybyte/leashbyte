@@ -1301,6 +1301,16 @@
             },
             "type": "array",
             "title": "Nodes"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "default": ""
+          },
+          "text_truncated": {
+            "type": "boolean",
+            "title": "Text Truncated",
+            "default": false
           }
         },
         "type": "object",

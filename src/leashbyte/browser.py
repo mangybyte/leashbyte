@@ -34,6 +34,22 @@ from .url_guard import URLGuard
 from .vault import https_page_origin, placeholder_parts
 
 USER_AGENT = "LeashByte/0.1 (+https://leashbyte.com)"
+# The model sees at most this much visible page text per observation. The page script
+# reads up to the scan limit, so redaction runs on more text than the model gets.
+PAGE_TEXT_LIMIT = 4_000
+PAGE_TEXT_SCAN_LIMIT = 100_000
+NODE_NAME_LIMIT = 300
+NODE_NAME_SCAN_LIMIT = 2_000
+PAGE_TEXT_SCRIPT = """limit => {
+  const body = document.body;
+  const raw = body ? String(body.innerText || '') : '';
+  const text = raw
+    .replace(/[ \\t\\f\\v\\u00a0]+/g, ' ')
+    .replace(/ *\\n */g, '\\n')
+    .replace(/\\n{3,}/g, '\\n\\n')
+    .trim();
+  return {text: text.slice(0, limit), cut: text.length > limit};
+}"""
 
 
 class ProfileLease:
@@ -273,23 +289,51 @@ class BrowserPool:
                 raise
 
     @staticmethod
+    def redaction_variants(secret: str) -> set[str]:
+        encoded = quote(secret, safe="")
+        form_encoded = quote_plus(secret, safe="")
+        lower_escapes = re.sub(r"%[0-9A-F]{2}", lambda match: match.group().lower(), encoded)
+        return {
+            secret,
+            html.escape(secret),
+            html.escape(secret, quote=False),
+            encoded,
+            form_encoded,
+            lower_escapes,
+            encoded.lower(),
+        }
+
+    @staticmethod
     def redact(session: Session, value: str) -> str:
         for secret in session.redactions:
-            encoded = quote(secret, safe="")
-            form_encoded = quote_plus(secret, safe="")
-            lower_escapes = re.sub(r"%[0-9A-F]{2}", lambda match: match.group().lower(), encoded)
-            variants = {
-                secret,
-                html.escape(secret),
-                html.escape(secret, quote=False),
-                encoded,
-                form_encoded,
-                lower_escapes,
-                encoded.lower(),
-            }
-            for variant in variants:
+            for variant in BrowserPool.redaction_variants(secret):
                 value = re.sub(re.escape(variant), "[redacted]", value, flags=re.IGNORECASE)
         return value
+
+    @staticmethod
+    def bounded_redact(
+        session: Session, value: object, scan_cut: bool, limit: int
+    ) -> tuple[str, bool]:
+        """Redact page text, then cut it to the limit.
+
+        The page script already cut the text at its scan limit. A secret that crosses
+        that cut is only partly there, so redaction cannot match it. In that case we drop
+        a tail as long as the longest secret form before the final cut.
+        """
+        if not isinstance(value, str):
+            return "", False
+        redacted = BrowserPool.redact(session, value)
+        if scan_cut:
+            margin = max(
+                (
+                    len(variant)
+                    for secret in session.redactions
+                    for variant in BrowserPool.redaction_variants(secret)
+                ),
+                default=0,
+            )
+            redacted = redacted[: max(0, len(redacted) - margin)]
+        return redacted[:limit], scan_cut or len(redacted) > limit
 
     def describe(self, session: Session) -> dict:
         page = session.context.pages[0] if session.context.pages else None
@@ -337,9 +381,9 @@ class BrowserPool:
                 if not await element.is_visible() or not await element.is_enabled():
                     continue
                 details = await element.evaluate(
-                    """element => {
+                    """(element, limit) => {
                       const tag = element.tagName.toLowerCase();
-                      const text = (
+                      const text = String(
                         element.getAttribute('aria-label') || element.innerText ||
                         element.getAttribute('placeholder') || element.getAttribute('name') || ''
                       ).trim();
@@ -350,18 +394,30 @@ class BrowserPool:
                       return {
                         tag,
                         role: element.getAttribute('role') || (roles[tag] || tag),
-                        name: text.slice(0, 300),
+                        name: text.slice(0, limit),
+                        name_cut: text.length > limit,
                         input_type: tag === 'input' ? element.type : null
                       };
-                    }"""
+                    }""",
+                    NODE_NAME_SCAN_LIMIT,
+                )
+                name, _ = self.bounded_redact(
+                    session, details.pop("name"), bool(details.pop("name_cut")), NODE_NAME_LIMIT
                 )
                 mark = len(marks) + 1
                 marks[mark] = element
-                nodes.append(
-                    {"mark": mark, **details, "name": self.redact(session, details["name"])}
-                )
+                nodes.append({"mark": mark, **details, "name": name})
             except PlaywrightError:
                 continue
+        try:
+            page_text = await page.evaluate(PAGE_TEXT_SCRIPT, PAGE_TEXT_SCAN_LIMIT)
+        except PlaywrightError:
+            page_text = {}
+        if not isinstance(page_text, dict):
+            page_text = {}
+        text, text_truncated = self.bounded_redact(
+            session, page_text.get("text"), page_text.get("cut") is True, PAGE_TEXT_LIMIT
+        )
         session.marks = marks
         session.latest_snapshot = uuid.uuid4().hex
         return {
@@ -370,6 +426,8 @@ class BrowserPool:
             "url": self.redact(session, page.url),
             "title": self.redact(session, await page.title()),
             "nodes": nodes,
+            "text": text,
+            "text_truncated": text_truncated,
         }
 
     async def intercept(self, session: Session, route: Route, request: PlaywrightRequest) -> None:

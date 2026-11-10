@@ -90,7 +90,16 @@ class Settings(BaseSettings):
     def _read_secret(direct: SecretStr | None, file: Path | None, name: str) -> str:
         value = ""
         if file is not None:
-            value = file.read_text(encoding="utf-8").strip()
+            try:
+                value = file.read_text(encoding="utf-8").strip()
+            except OSError as error:
+                reason = error.strerror or type(error).__name__
+                raise RuntimeError(
+                    f"LeashByte cannot read the file in {name}_FILE ({reason}). "
+                    "Give the user that runs LeashByte read access to it."
+                ) from error
+            except UnicodeDecodeError as error:
+                raise RuntimeError(f"The file in {name}_FILE is not UTF-8 text.") from error
         elif direct is not None:
             value = direct.get_secret_value().strip()
         if not value:

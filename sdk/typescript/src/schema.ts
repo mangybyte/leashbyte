@@ -409,6 +409,16 @@ export interface components {
             title: string;
             /** Nodes */
             nodes: components["schemas"]["BrowserNode"][];
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+            /**
+             * Text Truncated
+             * @default false
+             */
+            text_truncated: boolean;
         };
         /** CancelRunRequest */
         CancelRunRequest: {
