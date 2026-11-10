@@ -1,0 +1,70 @@
+name: Bug report
+description: Something in LeashByte doesn't work the way the docs say it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. If you think you've found a security problem, please stop here and use the [private report form](https://github.com/mangybyte/leashbyte/security/advisories/new) or email `security@leashbyte.com` instead. [SECURITY.md](https://github.com/mangybyte/leashbyte/blob/main/SECURITY.md) explains why.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: The release you installed, or the commit you built from (`git rev-parse --short HEAD`).
+      placeholder: 0.1.1, or a commit hash
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: How you run the stack
+      description: |
+        Tell us how LeashByte is set up. For example: the Docker and Compose versions, the host OS, whether you changed `compose.yaml` or `.env`, and which model server you use (Ollama, vLLM, llama-server, LM Studio, the Anthropic API) and its version. If you only use an SDK or `leashbyte-mcp`, say which one and its version.
+
+        Don't paste your `.env`: it holds every key the stack uses. Name the variables you changed, not their values.
+      placeholder: |
+        Docker 28.x, Compose 2.x, Ubuntu 24.04
+        Default compose.yaml, LEASHBYTE_LOCAL_MODEL_PORT changed to 8080
+        llama-server build 1234
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened
+      description: Include the HTTP status and error code if the API returned one.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The smallest set of steps that shows the problem. A request body or a short script is ideal.
+      placeholder: |
+        1. docker compose up --build -d --wait
+        2. curl -H "X-API-Key: ..." ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: |
+        Output from `docker compose logs <service>` or the client. Before you paste anything, remove API keys, tokens, vault values, cookies and any personal data. Request dumps need a look too: your API key travels in the `X-API-Key` header, and requests between the services carry `X-Service-Key`, the CDP key and the vault keys.
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Workarounds you found, or anything you've already ruled out.
+    validations:
+      required: false

@@ -4,7 +4,7 @@ LeashByte is pre-alpha. Please don't use it to process sensitive data yet.
 
 ## Reporting a vulnerability
 
-Email `security@leashbyte.com`, and please don't open a public issue for a suspected vulnerability.
+Use GitHub's [private report form](https://github.com/mangybyte/leashbyte/security/advisories/new) or email `security@leashbyte.com`, and please don't open a public issue for a suspected vulnerability.
 
 Tell us the affected version, how to reproduce the problem and what you think the impact is. Logs help, but take credentials and personal data out of them first.
 
