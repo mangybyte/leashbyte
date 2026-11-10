@@ -2,7 +2,7 @@
 
 LeashByte is a self-hosted toolkit that gives AI agents access to the web. It puts search, page fetching, real Chrome sessions, an encrypted credential vault and goal-driven agent runs behind one REST API, with an MCP server and Python and TypeScript SDKs on top. It's meant for developers who want their agents to search, read and use websites from their own machines, driven by a model they choose. A local model works fine.
 
-LeashByte is pre-alpha, so expect rough edges and breaking changes. The services run with Docker Compose from a source checkout. The Python SDK is on PyPI as `leashbyte-sdk`, and the server package as `leashbyte`.
+LeashByte is pre-alpha, so expect rough edges and breaking changes. The services run with Docker Compose from a source checkout. The Python SDK is on PyPI as `leashbyte-sdk`, and the server package as `leashbyte`. The TypeScript SDK is on npm as `leashbyte`.
 
 The project home is [leashbyte.com](https://leashbyte.com).
 
@@ -131,24 +131,23 @@ The client keeps its configured key out of `repr` and API errors. It can't do th
 
 ## TypeScript SDK
 
-The TypeScript SDK lives in `sdk/typescript`. Its [README](https://github.com/mangybyte/leashbyte/blob/main/sdk/typescript/README.md) has the install and usage details. To build it from the checkout:
+The TypeScript SDK is on npm. It has no runtime npm dependencies and uses Node's built-in `fetch` API.
 
 ```bash
-npm ci --prefix sdk/typescript
-npm --prefix sdk/typescript run build
+npm install leashbyte
 ```
 
-Then import `LeashByteClient` from `sdk/typescript/dist/src/index.js`. It has no runtime npm dependencies and uses Node's built-in `fetch` API.
-
 ```typescript
-import { LeashByteClient } from "./sdk/typescript/dist/src/index.js";
+import { LeashByteClient } from "leashbyte";
 
 const client = new LeashByteClient();
 const page = await client.fetchPage({ url: "https://example.com/" });
 console.log(page.status, page.final_url);
 ```
 
-It reads `LEASHBYTE_API_KEY` or `LEASHBYTE_API_KEY_FILE`. Pass `baseUrl` to the constructor for a different API address. The configured key is redacted from inspection, JSON serialization and API errors.
+The source lives in `sdk/typescript`. Its [README](https://github.com/mangybyte/leashbyte/blob/main/sdk/typescript/README.md) has more usage details and shows how to build it from the checkout.
+
+The client reads `LEASHBYTE_API_KEY` or `LEASHBYTE_API_KEY_FILE`. Pass `baseUrl` to the constructor for a different API address. The configured key is redacted from inspection, JSON serialization and API errors.
 
 ## Using the API
 

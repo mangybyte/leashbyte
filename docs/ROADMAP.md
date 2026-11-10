@@ -30,5 +30,3 @@ LeashByte is pre-alpha. These are the gaps we know about and the work we plan to
 - The static site has no dependency licence inventory yet.
 - Third-party GitHub Actions and container images should be pinned by digest.
 - Mail to the leashbyte.com addresses hasn't been verified end to end yet.
-- The PyPI and npm packages aren't published yet.
-- The project site and the first tagged release are next.

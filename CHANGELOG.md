@@ -8,6 +8,7 @@ The first release on PyPI, as `leashbyte` and `leashbyte-sdk`. 0.1.0 was a GitHu
 
 - The READMEs and the project site now give the PyPI install lines.
 - `leashbyte` now requires `leashbyte-sdk>=0.1.1,<0.2`. Before, it accepted any version.
+- The TypeScript SDK is on npm as `leashbyte` 0.1.1. Its code is the same as the `v0.1.1` tag. We published it from a later commit that only changes the docs, so the README in the package gives the npm install line.
 
 ## 0.1.0 - 2026-11-10
 

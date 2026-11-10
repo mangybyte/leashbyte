@@ -329,7 +329,7 @@ function App() {
               <li><span>03</span><div><h3>Run the example</h3><p>The quickstart fetches a page, runs a search and completes an agent run on your local model.</p></div></li>
             </ol>
           </div>
-          <p className="quickstart-note">The stack runs from this GitHub repository with Docker Compose. The Python SDK is on PyPI: <code>pip install leashbyte-sdk</code>.</p>
+          <p className="quickstart-note">The stack runs from this GitHub repository with Docker Compose. The Python SDK is on PyPI: <code>pip install leashbyte-sdk</code>. The TypeScript SDK is on npm: <code>npm install leashbyte</code>.</p>
           <p className="quickstart-note">The quickstart agent run needs an OpenAI-compatible chat completions endpoint. <a href={`${GITHUB_URL}#quickstart`} target="_blank" rel="noreferrer">Read the full quickstart <span aria-hidden="true">↗</span></a></p>
         </section>
 

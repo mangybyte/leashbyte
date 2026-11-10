@@ -1,6 +1,6 @@
 # LeashByte design
 
-This document describes how LeashByte is put together: the services, how requests flow through them, the agent loop, the vault, and the threat model behind the security choices. LeashByte is pre-alpha. The stack is meant to run on your own machine or network, and the PyPI and npm packages and the public site aren't out yet.
+This document describes how LeashByte is put together: the services, how requests flow through them, the agent loop, the vault, and the threat model behind the security choices. LeashByte is pre-alpha. The stack is meant to run on your own machine or network.
 
 ## What it is for
 
