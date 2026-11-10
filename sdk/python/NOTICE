@@ -1,0 +1,6 @@
+LeashByte Python SDK
+Copyright 2026 MangyByte Ltd
+
+This package uses HTTPX under BSD-3-Clause and Pydantic under MIT.
+Those packages retain their licence files in their installed dist-info directories.
+Neither locked dependency distribution contains a NOTICE file to copy.

@@ -1,0 +1,365 @@
+name: leashbyte
+
+configs:
+  searxng_settings:
+    content: |
+      use_default_settings: true
+      server:
+        secret_key: "${LEASHBYTE_SEARXNG_SECRET_KEY:?Set LEASHBYTE_SEARXNG_SECRET_KEY in .env}"
+      search:
+        safe_search: 1
+        formats:
+          - html
+          - json
+
+services:
+  api:
+    build:
+      context: .
+      target: runtime
+    container_name: leashbyte-api
+    environment:
+      LEASHBYTE_API_KEY: ${LEASHBYTE_API_KEY:-}
+      LEASHBYTE_API_KEY_FILE: ${LEASHBYTE_API_KEY_FILE:-}
+      LEASHBYTE_SERVICE_KEY: ${LEASHBYTE_SERVICE_KEY:-}
+      LEASHBYTE_SERVICE_KEY_FILE: ${LEASHBYTE_SERVICE_KEY_FILE:-}
+      LEASHBYTE_VAULT_MANAGE_KEY: ${LEASHBYTE_VAULT_MANAGE_KEY:-}
+      LEASHBYTE_VAULT_MANAGE_KEY_FILE: ${LEASHBYTE_VAULT_MANAGE_KEY_FILE:-}
+      LEASHBYTE_SEARXNG_BASE_URL: ${LEASHBYTE_SEARXNG_BASE_URL:-http://searxng:8080}
+      LEASHBYTE_BROWSER_POOL_BASE_URL: ${LEASHBYTE_BROWSER_POOL_BASE_URL:-http://browser-pool:8082}
+      LEASHBYTE_VAULT_BASE_URL: ${LEASHBYTE_VAULT_BASE_URL:-http://vault:8081}
+      LEASHBYTE_PRIVATE_NETWORK_ALLOWLIST: ${LEASHBYTE_PRIVATE_NETWORK_ALLOWLIST:-}
+      LEASHBYTE_FETCH_TIMEOUT_SECONDS: ${LEASHBYTE_FETCH_TIMEOUT_SECONDS:-20}
+      LEASHBYTE_FETCH_MAX_BYTES: ${LEASHBYTE_FETCH_MAX_BYTES:-2000000}
+      LEASHBYTE_FETCH_MAX_REDIRECTS: ${LEASHBYTE_FETCH_MAX_REDIRECTS:-5}
+      LEASHBYTE_SEARCH_MAX_RESULTS: ${LEASHBYTE_SEARCH_MAX_RESULTS:-10}
+      LEASHBYTE_RESPECT_ROBOTS: ${LEASHBYTE_RESPECT_ROBOTS:-true}
+      LEASHBYTE_BROWSER_MAX_SESSIONS: ${LEASHBYTE_BROWSER_MAX_SESSIONS:-2}
+      LEASHBYTE_BROWSER_LEASE_SECONDS: ${LEASHBYTE_BROWSER_LEASE_SECONDS:-900}
+      LEASHBYTE_CDP_GRANT_SECONDS: ${LEASHBYTE_CDP_GRANT_SECONDS:-60}
+      LEASHBYTE_DATABASE_DSN: postgresql://leashbyte:${LEASHBYTE_POSTGRES_PASSWORD:?Set LEASHBYTE_POSTGRES_PASSWORD in .env}@run-store:5432/leashbyte
+      LEASHBYTE_RUN_ARTIFACT_ROOT: /data/run-artifacts
+      LEASHBYTE_LOCAL_MODEL_NAME: ${LEASHBYTE_LOCAL_MODEL_NAME:-}
+    volumes:
+      - run-artifacts:/data/run-artifacts
+    ports:
+      - "${LEASHBYTE_BIND_ADDRESS:-127.0.0.1}:${LEASHBYTE_PORT:-8080}:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      searxng:
+        condition: service_healthy
+      browser-pool:
+        condition: service_healthy
+      vault:
+        condition: service_healthy
+      run-store:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    cpus: 0.5
+    pids_limit: 128
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  mcp:
+    build:
+      context: .
+      target: runtime
+    container_name: leashbyte-mcp
+    environment:
+      LEASHBYTE_API_URL: http://api:8080
+      LEASHBYTE_API_KEY: ${LEASHBYTE_API_KEY:-}
+    command: ["leashbyte-mcp", "--transport", "streamable-http", "--host", "0.0.0.0", "--port", "8081"]
+    ports:
+      - "${LEASHBYTE_MCP_BIND_ADDRESS:-127.0.0.1}:${LEASHBYTE_MCP_PORT:-8081}:8081"
+    depends_on:
+      api:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    cpus: 0.25
+    pids_limit: 64
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8081), 2).close()"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  browser-pool:
+    build:
+      context: .
+      target: browser
+    container_name: leashbyte-browser-pool
+    init: true
+    environment:
+      HOME: /tmp
+      LEASHBYTE_SERVICE_KEY: ${LEASHBYTE_SERVICE_KEY:-}
+      LEASHBYTE_SERVICE_KEY_FILE: ${LEASHBYTE_SERVICE_KEY_FILE:-}
+      LEASHBYTE_VAULT_RESOLVE_KEY: ${LEASHBYTE_VAULT_RESOLVE_KEY:-}
+      LEASHBYTE_VAULT_RESOLVE_KEY_FILE: ${LEASHBYTE_VAULT_RESOLVE_KEY_FILE:-}
+      LEASHBYTE_CDP_KEY: ${LEASHBYTE_CDP_KEY:-}
+      LEASHBYTE_CDP_KEY_FILE: ${LEASHBYTE_CDP_KEY_FILE:-}
+      LEASHBYTE_VAULT_BASE_URL: ${LEASHBYTE_VAULT_BASE_URL:-http://vault:8081}
+      LEASHBYTE_PRIVATE_NETWORK_ALLOWLIST: ${LEASHBYTE_PRIVATE_NETWORK_ALLOWLIST:-}
+      LEASHBYTE_RESPECT_ROBOTS: ${LEASHBYTE_RESPECT_ROBOTS:-true}
+      LEASHBYTE_FETCH_MIN_HOST_INTERVAL_SECONDS: ${LEASHBYTE_FETCH_MIN_HOST_INTERVAL_SECONDS:-1}
+      LEASHBYTE_BROWSER_PROFILE_ROOT: /data/profiles
+      LEASHBYTE_BROWSER_MAX_SESSIONS: ${LEASHBYTE_BROWSER_MAX_SESSIONS:-2}
+      LEASHBYTE_BROWSER_LEASE_SECONDS: ${LEASHBYTE_BROWSER_LEASE_SECONDS:-900}
+      LEASHBYTE_CDP_GRANT_SECONDS: ${LEASHBYTE_CDP_GRANT_SECONDS:-60}
+      LEASHBYTE_BROWSER_PLUGINS_ENABLED: ${LEASHBYTE_BROWSER_PLUGINS_ENABLED:-false}
+      LEASHBYTE_BROWSER_PLUGIN_MODULES: ${LEASHBYTE_BROWSER_PLUGIN_MODULES:-}
+      LEASHBYTE_BROWSER_TLS_SPKI_ALLOWLIST: ${LEASHBYTE_BROWSER_TLS_SPKI_ALLOWLIST:-}
+      LEASHBYTE_WEB_BOT_AUTH_KEY_ID: ${LEASHBYTE_WEB_BOT_AUTH_KEY_ID:-}
+      LEASHBYTE_WEB_BOT_AUTH_AGENT_URL: ${LEASHBYTE_WEB_BOT_AUTH_AGENT_URL:-https://leashbyte.com}
+      LEASHBYTE_WEB_BOT_AUTH_KEY_FILE: ${LEASHBYTE_WEB_BOT_AUTH_KEY_FILE:-}
+    volumes:
+      - browser-profiles:/data/profiles
+      - ${LEASHBYTE_WEB_BOT_AUTH_HOST_KEY_FILE:-/dev/null}:/run/web-bot-auth.key:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m
+    shm_size: 512m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 2g
+    cpus: 1.5
+    pids_limit: 512
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8082/healthz', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  vault:
+    build:
+      context: .
+      target: runtime
+    container_name: leashbyte-vault
+    environment:
+      LEASHBYTE_VAULT_MANAGE_KEY: ${LEASHBYTE_VAULT_MANAGE_KEY:-}
+      LEASHBYTE_VAULT_MANAGE_KEY_FILE: ${LEASHBYTE_VAULT_MANAGE_KEY_FILE:-}
+      LEASHBYTE_VAULT_RESOLVE_KEY: ${LEASHBYTE_VAULT_RESOLVE_KEY:-}
+      LEASHBYTE_VAULT_RESOLVE_KEY_FILE: ${LEASHBYTE_VAULT_RESOLVE_KEY_FILE:-}
+      LEASHBYTE_VAULT_MASTER_KEY: ${LEASHBYTE_VAULT_MASTER_KEY:-}
+      LEASHBYTE_VAULT_MASTER_KEY_FILE: ${LEASHBYTE_VAULT_MASTER_KEY_FILE:-}
+    command: ["uvicorn", "leashbyte.vault_service:create_vault_app", "--factory", "--host", "0.0.0.0", "--port", "8081"]
+    volumes:
+      - vault-data:/data/vault
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 256m
+    cpus: 0.25
+    pids_limit: 64
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8081/healthz', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  agent-worker:
+    build:
+      context: .
+      target: runtime
+    container_name: leashbyte-agent-worker
+    restart: unless-stopped
+    environment:
+      LEASHBYTE_SERVICE_KEY: ${LEASHBYTE_SERVICE_KEY:-}
+      LEASHBYTE_SERVICE_KEY_FILE: ${LEASHBYTE_SERVICE_KEY_FILE:-}
+      LEASHBYTE_VAULT_MANAGE_KEY: ${LEASHBYTE_VAULT_MANAGE_KEY:-}
+      LEASHBYTE_VAULT_MANAGE_KEY_FILE: ${LEASHBYTE_VAULT_MANAGE_KEY_FILE:-}
+      LEASHBYTE_BROWSER_POOL_BASE_URL: ${LEASHBYTE_BROWSER_POOL_BASE_URL:-http://browser-pool:8082}
+      LEASHBYTE_VAULT_BASE_URL: ${LEASHBYTE_VAULT_BASE_URL:-http://vault:8081}
+      LEASHBYTE_DATABASE_DSN: postgresql://leashbyte:${LEASHBYTE_POSTGRES_PASSWORD:?Set LEASHBYTE_POSTGRES_PASSWORD in .env}@run-store:5432/leashbyte
+      LEASHBYTE_RUN_ARTIFACT_ROOT: /data/run-artifacts
+      LEASHBYTE_LOCAL_MODEL_BASE_URL: ${LEASHBYTE_LOCAL_MODEL_BASE_URL:-http://${LEASHBYTE_COMPOSE_GATEWAY:-172.29.250.1}:${LEASHBYTE_LOCAL_MODEL_PORT:-11434}/v1}
+      LEASHBYTE_LOCAL_MODEL_NAME: ${LEASHBYTE_LOCAL_MODEL_NAME:-}
+      LEASHBYTE_LOCAL_MODEL_API_KEY: ${LEASHBYTE_LOCAL_MODEL_API_KEY:-}
+      LEASHBYTE_LOCAL_MODEL_API_KEY_FILE: ${LEASHBYTE_LOCAL_MODEL_API_KEY_FILE:-}
+      LEASHBYTE_ANTHROPIC_API_KEY_FILE: /run/anthropic.key
+      LEASHBYTE_MODEL_TIMEOUT_SECONDS: ${LEASHBYTE_MODEL_TIMEOUT_SECONDS:-120}
+      LEASHBYTE_AGENT_POLL_SECONDS: ${LEASHBYTE_AGENT_POLL_SECONDS:-0.5}
+    command: ["python", "-m", "leashbyte.worker_service"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - run-artifacts:/data/run-artifacts
+      - ${LEASHBYTE_ANTHROPIC_API_KEY_HOST_FILE:-/dev/null}:/run/anthropic.key:ro
+    depends_on:
+      model-relay:
+        condition: service_healthy
+      browser-pool:
+        condition: service_healthy
+      vault:
+        condition: service_healthy
+      run-store:
+        condition: service_healthy
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    cpus: 0.5
+    pids_limit: 128
+
+  model-relay:
+    build:
+      context: .
+      target: runtime
+    container_name: leashbyte-model-relay
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      LEASHBYTE_MODEL_RELAY_BIND_HOST: ${LEASHBYTE_COMPOSE_GATEWAY:-172.29.250.1}
+      LEASHBYTE_MODEL_RELAY_NETWORK: ${LEASHBYTE_COMPOSE_SUBNET:-172.29.250.0/24}
+      LEASHBYTE_MODEL_RELAY_BIND_PORT: ${LEASHBYTE_LOCAL_MODEL_PORT:-11434}
+      LEASHBYTE_MODEL_RELAY_UPSTREAM_PORT: ${LEASHBYTE_LOCAL_MODEL_PORT:-11434}
+    command: ["python", "-m", "leashbyte.model_relay"]
+    read_only: true
+    tmpfs:
+      - /tmp:size=1m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 64m
+    cpus: 0.1
+    pids_limit: 16
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os,socket; s=socket.create_connection((os.environ['LEASHBYTE_MODEL_RELAY_BIND_HOST'],int(os.environ['LEASHBYTE_MODEL_RELAY_BIND_PORT'])),2); s.close()"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+
+  run-store:
+    image: postgres:17.6-alpine
+    container_name: leashbyte-run-store
+    environment:
+      POSTGRES_USER: leashbyte
+      POSTGRES_PASSWORD: ${LEASHBYTE_POSTGRES_PASSWORD:?Set LEASHBYTE_POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: leashbyte
+    volumes:
+      - run-store-data:/var/lib/postgresql/data
+    read_only: true
+    tmpfs:
+      - /run/postgresql:size=16m
+      - /tmp:size=16m
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - FSETID
+      - SETGID
+      - SETUID
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    cpus: 0.5
+    pids_limit: 128
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U leashbyte -d leashbyte"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  searxng:
+    image: searxng/searxng@sha256:c750ee1d859b26d3aeae51c07f6a48c3a0bfbaa9195d71a18b258862d88c4c3c
+    container_name: leashbyte-searxng
+    user: "977:977"
+    configs:
+      - source: searxng_settings
+        target: /etc/searxng/settings.yml
+    volumes:
+      - searxng-cache:/var/cache/searxng
+    read_only: false
+    tmpfs:
+      - /tmp:size=32m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "/usr/local/searxng/.venv/bin/python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 24
+      start_period: 20s
+
+  fill-fixture:
+    image: python:3.13-slim
+    profiles: ["test"]
+    container_name: leashbyte-fill-fixture
+    user: "1000:1000"
+    command: ["python", "-I", "/app/fill_fixture.py"]
+    volumes:
+      - ./ci/fill_fixture.py:/app/fill_fixture.py:ro
+      - ${LEASHBYTE_FILL_CERT_FILE:-/dev/null}:/run/fixture/cert.pem:ro
+      - ${LEASHBYTE_FILL_KEY_FILE:-/dev/null}:/run/fixture/key.pem:ro
+    networks:
+      default:
+        aliases:
+          - fixture.internal
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 128m
+    cpus: 0.1
+    pids_limit: 32
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8443), 2).close()"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: ${LEASHBYTE_COMPOSE_SUBNET:-172.29.250.0/24}
+          gateway: ${LEASHBYTE_COMPOSE_GATEWAY:-172.29.250.1}
+
+volumes:
+  searxng-cache:
+  browser-profiles:
+  vault-data:
+  run-store-data:
+  run-artifacts:

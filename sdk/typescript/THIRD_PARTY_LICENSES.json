@@ -1,0 +1,461 @@
+{
+  "@babel/code-frame@7.29.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "licenseFile": "node_modules/@babel/code-frame/LICENSE"
+  },
+  "@babel/helper-validator-identifier@7.29.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/babel/babel",
+    "licenseFile": "node_modules/@babel/helper-validator-identifier/LICENSE"
+  },
+  "@redocly/ajv@8.11.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ajv-validator/ajv",
+    "licenseFile": "node_modules/@redocly/ajv/LICENSE"
+  },
+  "@redocly/config@0.22.0": {
+    "licenses": "MIT",
+    "licenseFile": "node_modules/@redocly/config/LICENSE"
+  },
+  "@redocly/openapi-core@1.34.24": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Redocly/redocly-cli",
+    "licenseFile": "node_modules/@redocly/openapi-core/README.md"
+  },
+  "@types/node@25.9.9": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "licenseFile": "node_modules/@types/node/LICENSE"
+  },
+  "abbrev@1.1.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/abbrev-js",
+    "licenseFile": "node_modules/abbrev/LICENSE"
+  },
+  "agent-base@7.1.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/TooTallNate/proxy-agents",
+    "licenseFile": "node_modules/agent-base/LICENSE"
+  },
+  "ansi-colors@4.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/doowb/ansi-colors",
+    "licenseFile": "node_modules/ansi-colors/LICENSE"
+  },
+  "ansi-styles@3.2.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/ansi-styles",
+    "licenseFile": "node_modules/ansi-styles/license"
+  },
+  "argparse@2.0.1": {
+    "licenses": "Python-2.0",
+    "repository": "https://github.com/nodeca/argparse",
+    "licenseFile": "node_modules/argparse/LICENSE"
+  },
+  "array-find-index@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/array-find-index",
+    "licenseFile": "node_modules/array-find-index/license"
+  },
+  "asap@2.0.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/kriskowal/asap",
+    "licenseFile": "node_modules/asap/LICENSE.md"
+  },
+  "balanced-match@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/balanced-match",
+    "licenseFile": "node_modules/balanced-match/LICENSE.md"
+  },
+  "brace-expansion@1.1.21": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/brace-expansion",
+    "licenseFile": "node_modules/glob/node_modules/brace-expansion/LICENSE"
+  },
+  "brace-expansion@2.1.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/juliangruber/brace-expansion",
+    "licenseFile": "node_modules/brace-expansion/LICENSE"
+  },
+  "chalk@2.4.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/chalk",
+    "licenseFile": "node_modules/chalk/license"
+  },
+  "change-case@5.4.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/blakeembrey/change-case",
+    "licenseFile": "node_modules/change-case/README.md"
+  },
+  "color-convert@1.9.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Qix-/color-convert",
+    "licenseFile": "node_modules/color-convert/LICENSE"
+  },
+  "color-name@1.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/dfcreative/color-name",
+    "licenseFile": "node_modules/color-name/LICENSE"
+  },
+  "colorette@1.4.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jorgebucaran/colorette",
+    "licenseFile": "node_modules/colorette/LICENSE.md"
+  },
+  "concat-map@0.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/substack/node-concat-map",
+    "licenseFile": "node_modules/concat-map/LICENSE"
+  },
+  "debug@3.2.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/visionmedia/debug",
+    "licenseFile": "node_modules/debug/LICENSE"
+  },
+  "debug@4.4.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/debug-js/debug",
+    "licenseFile": "node_modules/https-proxy-agent/node_modules/debug/LICENSE"
+  },
+  "debuglog@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sam-github/node-debuglog",
+    "licenseFile": "node_modules/debuglog/LICENSE"
+  },
+  "dezalgo@1.0.4": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/dezalgo",
+    "licenseFile": "node_modules/dezalgo/LICENSE"
+  },
+  "es-errors@1.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ljharb/es-errors",
+    "licenseFile": "node_modules/es-errors/LICENSE"
+  },
+  "escape-string-regexp@1.0.5": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/escape-string-regexp",
+    "licenseFile": "node_modules/escape-string-regexp/license"
+  },
+  "fast-deep-equal@3.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/epoberezkin/fast-deep-equal",
+    "licenseFile": "node_modules/fast-deep-equal/LICENSE"
+  },
+  "fs.realpath@1.0.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/fs.realpath",
+    "licenseFile": "node_modules/fs.realpath/LICENSE"
+  },
+  "function-bind@1.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/Raynos/function-bind",
+    "licenseFile": "node_modules/function-bind/LICENSE"
+  },
+  "glob@7.2.3": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/node-glob",
+    "licenseFile": "node_modules/glob/LICENSE"
+  },
+  "graceful-fs@4.2.11": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/node-graceful-fs",
+    "licenseFile": "node_modules/graceful-fs/LICENSE"
+  },
+  "has-flag@3.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/has-flag",
+    "licenseFile": "node_modules/has-flag/license"
+  },
+  "hasown@2.0.4": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/hasOwn",
+    "licenseFile": "node_modules/hasown/LICENSE"
+  },
+  "hosted-git-info@2.8.9": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/hosted-git-info",
+    "licenseFile": "node_modules/hosted-git-info/LICENSE"
+  },
+  "https-proxy-agent@7.0.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/TooTallNate/proxy-agents",
+    "licenseFile": "node_modules/https-proxy-agent/LICENSE"
+  },
+  "index-to-position@1.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/index-to-position",
+    "licenseFile": "node_modules/index-to-position/license"
+  },
+  "inflight@1.0.6": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/inflight",
+    "licenseFile": "node_modules/inflight/LICENSE"
+  },
+  "inherits@2.0.4": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/inherits",
+    "licenseFile": "node_modules/inherits/LICENSE"
+  },
+  "is-core-module@2.18.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/is-core-module",
+    "licenseFile": "node_modules/is-core-module/LICENSE"
+  },
+  "js-levenshtein@1.1.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/gustf/js-levenshtein",
+    "licenseFile": "node_modules/js-levenshtein/LICENSE"
+  },
+  "js-tokens@4.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/lydell/js-tokens",
+    "licenseFile": "node_modules/js-tokens/LICENSE"
+  },
+  "js-yaml@4.3.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodeca/js-yaml",
+    "licenseFile": "node_modules/js-yaml/LICENSE"
+  },
+  "json-parse-even-better-errors@2.3.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/npm/json-parse-even-better-errors",
+    "licenseFile": "node_modules/json-parse-even-better-errors/LICENSE.md"
+  },
+  "json-schema-traverse@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/epoberezkin/json-schema-traverse",
+    "licenseFile": "node_modules/json-schema-traverse/LICENSE"
+  },
+  "license-checker@25.0.1": {
+    "licenses": "BSD-3-Clause",
+    "repository": "https://github.com/davglass/license-checker",
+    "licenseFile": "node_modules/license-checker/LICENSE"
+  },
+  "minimatch@3.1.5": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/minimatch",
+    "licenseFile": "node_modules/glob/node_modules/minimatch/LICENSE"
+  },
+  "minimatch@5.1.9": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/minimatch",
+    "licenseFile": "node_modules/minimatch/LICENSE"
+  },
+  "minimist@1.2.8": {
+    "licenses": "MIT",
+    "repository": "https://github.com/minimistjs/minimist",
+    "licenseFile": "node_modules/minimist/LICENSE"
+  },
+  "mkdirp@0.5.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/substack/node-mkdirp",
+    "licenseFile": "node_modules/mkdirp/LICENSE"
+  },
+  "ms@2.1.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/vercel/ms",
+    "licenseFile": "node_modules/ms/license.md"
+  },
+  "nopt@4.0.3": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/nopt",
+    "licenseFile": "node_modules/nopt/LICENSE"
+  },
+  "normalize-package-data@2.5.0": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/npm/normalize-package-data",
+    "licenseFile": "node_modules/normalize-package-data/LICENSE"
+  },
+  "npm-normalize-package-bin@1.0.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/npm-normalize-package-bin",
+    "licenseFile": "node_modules/npm-normalize-package-bin/LICENSE"
+  },
+  "once@1.4.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/once",
+    "licenseFile": "node_modules/once/LICENSE"
+  },
+  "openapi-typescript@7.13.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/openapi-ts/openapi-typescript",
+    "licenseFile": "node_modules/openapi-typescript/LICENSE"
+  },
+  "os-homedir@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/os-homedir",
+    "licenseFile": "node_modules/os-homedir/license"
+  },
+  "os-tmpdir@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/os-tmpdir",
+    "licenseFile": "node_modules/os-tmpdir/license"
+  },
+  "osenv@0.1.5": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/osenv",
+    "licenseFile": "node_modules/osenv/LICENSE"
+  },
+  "parse-json@8.3.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/parse-json",
+    "licenseFile": "node_modules/parse-json/license"
+  },
+  "path-is-absolute@1.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/path-is-absolute",
+    "licenseFile": "node_modules/path-is-absolute/license"
+  },
+  "path-parse@1.0.7": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jbgutierrez/path-parse",
+    "licenseFile": "node_modules/path-parse/LICENSE"
+  },
+  "picocolors@1.1.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/alexeyraspopov/picocolors",
+    "licenseFile": "node_modules/picocolors/LICENSE"
+  },
+  "pluralize@8.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/blakeembrey/pluralize",
+    "licenseFile": "node_modules/pluralize/LICENSE"
+  },
+  "read-installed@4.0.3": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/read-installed",
+    "licenseFile": "node_modules/read-installed/LICENSE"
+  },
+  "read-package-json@2.1.2": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/read-package-json",
+    "licenseFile": "node_modules/read-package-json/LICENSE"
+  },
+  "readdir-scoped-modules@1.1.0": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/readdir-scoped-modules",
+    "licenseFile": "node_modules/readdir-scoped-modules/LICENSE"
+  },
+  "require-from-string@2.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/floatdrop/require-from-string",
+    "licenseFile": "node_modules/require-from-string/license"
+  },
+  "resolve@1.22.14": {
+    "licenses": "MIT",
+    "repository": "https://github.com/browserify/resolve",
+    "licenseFile": "node_modules/resolve/LICENSE"
+  },
+  "semver@5.7.3": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/node-semver",
+    "licenseFile": "node_modules/semver/LICENSE"
+  },
+  "slide@1.1.6": {
+    "licenses": "ISC",
+    "repository": "https://github.com/isaacs/slide-flow-control",
+    "licenseFile": "node_modules/slide/LICENSE"
+  },
+  "spdx-compare@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/kemitchell/spdx-compare.js",
+    "licenseFile": "node_modules/spdx-compare/LICENSE.md"
+  },
+  "spdx-correct@3.2.0": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/jslicense/spdx-correct.js",
+    "licenseFile": "node_modules/spdx-correct/LICENSE"
+  },
+  "spdx-exceptions@2.5.0": {
+    "licenses": "CC-BY-3.0",
+    "repository": "https://github.com/kemitchell/spdx-exceptions.json",
+    "licenseFile": "node_modules/spdx-exceptions/README.md"
+  },
+  "spdx-expression-parse@3.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jslicense/spdx-expression-parse.js",
+    "licenseFile": "node_modules/spdx-expression-parse/LICENSE"
+  },
+  "spdx-license-ids@3.0.24": {
+    "licenses": "CC0-1.0",
+    "repository": "https://github.com/jslicense/spdx-license-ids",
+    "licenseFile": "node_modules/spdx-license-ids/README.md"
+  },
+  "spdx-ranges@2.1.1": {
+    "licenses": "(MIT AND CC-BY-3.0)",
+    "repository": "https://github.com/kemitchell/spdx-ranges.js",
+    "licenseFile": "node_modules/spdx-ranges/LICENSE.md"
+  },
+  "spdx-satisfies@4.0.1": {
+    "licenses": "MIT",
+    "repository": "https://github.com/kemitchell/spdx-satisfies.js",
+    "licenseFile": "node_modules/spdx-satisfies/LICENSE"
+  },
+  "supports-color@10.2.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/supports-color",
+    "licenseFile": "node_modules/openapi-typescript/node_modules/supports-color/license"
+  },
+  "supports-color@5.5.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/chalk/supports-color",
+    "licenseFile": "node_modules/supports-color/license"
+  },
+  "supports-preserve-symlinks-flag@1.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/inspect-js/node-supports-preserve-symlinks-flag",
+    "licenseFile": "node_modules/supports-preserve-symlinks-flag/LICENSE"
+  },
+  "treeify@1.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/notatestuser/treeify",
+    "licenseFile": "node_modules/treeify/LICENSE"
+  },
+  "type-fest@4.41.0": {
+    "licenses": "(MIT OR CC0-1.0)",
+    "repository": "https://github.com/sindresorhus/type-fest",
+    "licenseFile": "node_modules/type-fest/license-cc0"
+  },
+  "typescript@5.9.3": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/microsoft/TypeScript",
+    "licenseFile": "node_modules/typescript/LICENSE.txt"
+  },
+  "undici-types@7.24.6": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodejs/undici",
+    "licenseFile": "node_modules/undici-types/LICENSE"
+  },
+  "uri-js-replace@1.0.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/andreinwald/uri-js-replace",
+    "licenseFile": "node_modules/uri-js-replace/LICENSE"
+  },
+  "util-extend@1.0.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/isaacs/util-extend",
+    "licenseFile": "node_modules/util-extend/LICENSE"
+  },
+  "validate-npm-package-license@3.0.4": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/kemitchell/validate-npm-package-license.js",
+    "licenseFile": "node_modules/validate-npm-package-license/LICENSE"
+  },
+  "wrappy@1.0.2": {
+    "licenses": "ISC",
+    "repository": "https://github.com/npm/wrappy",
+    "licenseFile": "node_modules/wrappy/LICENSE"
+  },
+  "yaml-ast-parser@0.0.43": {
+    "licenses": "Apache-2.0",
+    "repository": "https://github.com/mulesoft-labs/yaml-ast-parser",
+    "licenseFile": "node_modules/yaml-ast-parser/license.txt"
+  },
+  "yargs-parser@21.1.1": {
+    "licenses": "ISC",
+    "repository": "https://github.com/yargs/yargs-parser",
+    "licenseFile": "node_modules/yargs-parser/LICENSE.txt"
+  }
+}

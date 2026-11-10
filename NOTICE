@@ -1,0 +1,29 @@
+LeashByte
+Copyright 2026 MangyByte Ltd
+
+THIRD-PARTY ATTRIBUTIONS
+
+Trafilatura is an unmodified Python dependency under Apache-2.0.
+Its locked distribution contains no NOTICE file to copy.
+
+Playwright is copyright Microsoft Corporation and uses Apache-2.0.
+Playwright contains code derived from the Puppeteer project under Apache-2.0.
+The Playwright distribution retains its NOTICE and ThirdPartyNotices.txt files.
+
+The Anthropic Python SDK uses MIT.
+It vendors httpx-aiohttp 0.2.0 under BSD-3-Clause.
+That vendored code is copyright 2025 Karen Petrosyan.
+The Anthropic distribution retains the upstream provenance notice and licence.
+
+The Python dependency licence files remain in their installed dist-info directories.
+The full Python package inventory is in docs/python-licenses.json.
+The JavaScript package inventory is in sdk/typescript/THIRD_PARTY_LICENSES.json.
+The JavaScript report records each package-relative licence path.
+
+SearXNG is a separate unmodified container under AGPL-3.0.
+LeashByte calls its HTTP API and copies none of its source code.
+Its source is available at https://github.com/searxng/searxng.
+
+Container base images retain their operating-system copyright files.
+Google Chrome retains its proprietary licence and notices.
+See docs/THIRD_PARTY.md for image references and notice locations.
