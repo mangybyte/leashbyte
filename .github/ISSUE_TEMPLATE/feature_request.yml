@@ -2,6 +2,10 @@ name: Feature request
 description: Suggest a change or something new.
 labels: ["enhancement"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        If your idea comes from a way around one of LeashByte's protections, please send it through the [private report form](https://github.com/mangybyte/leashbyte/security/advisories/new) or to `security@leashbyte.com` instead.
   - type: textarea
     id: problem
     attributes:
