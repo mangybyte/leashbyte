@@ -290,6 +290,9 @@ class BrowserPool:
         lower_escapes = re.sub(r"%[0-9A-F]{2}", lambda match: match.group().lower(), encoded)
         return {
             secret,
+            # innerText and our own whitespace collapse can turn a tab, a no-break space
+            # or a run of spaces in a secret into one space.
+            " ".join(secret.split()),
             html.escape(secret),
             html.escape(secret, quote=False),
             encoded,
@@ -302,7 +305,8 @@ class BrowserPool:
     def redact(session: Session, value: str) -> str:
         for secret in session.redactions:
             for variant in BrowserPool.redaction_variants(secret):
-                value = re.sub(re.escape(variant), "[redacted]", value, flags=re.IGNORECASE)
+                if variant:
+                    value = re.sub(re.escape(variant), "[redacted]", value, flags=re.IGNORECASE)
         return value
 
     @staticmethod
@@ -337,6 +341,8 @@ class BrowserPool:
         redacted = re.sub(r"[ \t\f\v\u00a0]+", " ", redacted)
         redacted = re.sub(r" *\n *", "\n", redacted)
         redacted = re.sub(r"\n{3,}", "\n\n", redacted).strip()
+        # Collapsing can rebuild a secret that the page showed with other whitespace.
+        redacted = BrowserPool.redact(session, redacted)
         return redacted[:limit], scan_cut or len(redacted) > limit
 
     def describe(self, session: Session) -> dict:

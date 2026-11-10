@@ -404,6 +404,9 @@ async def test_page_text_is_redacted_bounded_and_counted() -> None:
     tabbed = SimpleNamespace(redactions=["two\tspaced  secret"])
     spaced, _ = BrowserPool.bounded_redact(tabbed, "pw two\tspaced  secret end", False, 1000, 2000)
     assert spaced == "pw [redacted] end"
+    no_break = SimpleNamespace(redactions=["correct horse"])
+    rebuilt, _ = BrowserPool.bounded_redact(no_break, "pw correct\u00a0horse", False, 1000, 2000)
+    assert rebuilt == "pw [redacted]"
     oversized, oversized_cut = BrowserPool.bounded_redact(
         session, "x" * (PAGE_TEXT_SCAN_LIMIT * 2), False, PAGE_TEXT_LIMIT, PAGE_TEXT_SCAN_LIMIT
     )

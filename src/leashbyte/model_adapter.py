@@ -93,10 +93,8 @@ def validation_fault(error: Exception) -> str:
     Only Pydantic error types, our own field names and list indexes go in. A field
     name that the model invented is shown as unknown_field.
     """
-    if isinstance(error, (json.JSONDecodeError, RecursionError)):
-        return "json_invalid"
     if not isinstance(error, ValidationError):
-        return "type_error"
+        return "type_error" if isinstance(error, TypeError) else "json_invalid"
     faults = []
     for item in error.errors(include_url=False, include_context=False, include_input=False):
         parts = []
@@ -118,7 +116,7 @@ def validation_fault(error: Exception) -> str:
 def parse_action_text(text: str | None, stop_reason: str | None = None) -> AgentAction:
     try:
         return AgentAction.model_validate(json.loads(text))
-    except (json.JSONDecodeError, ValidationError, TypeError, RecursionError) as error:
+    except (ValueError, TypeError, RecursionError) as error:
         fault = validation_fault(error)
         if stop_reason in _KNOWN_STOP_REASONS:
             fault += f", stop reason {stop_reason}"

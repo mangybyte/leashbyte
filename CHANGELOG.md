@@ -6,7 +6,7 @@ Agents can now read the page they are on.
 
 ### Added
 
-- Snapshots and agent observations carry the visible text of the page in reading order, as `text`, cut at 4,000 characters, with `text_truncated` set when we cut it. Secret values are redacted from it the same way as element names. Before, the model only saw the title and the names of links, buttons and form fields, so it could not answer a question about a paragraph or a price.
+- Snapshots and agent observations carry the rendered text of the page in reading order, as `text`, cut at 4,000 characters, with `text_truncated` set when we cut it. Secret values are redacted from it the same way as element names. Before, the model only saw the title and the names of links, buttons and form fields, so it could not answer a question about a paragraph or a price.
 
 ### Changed
 
