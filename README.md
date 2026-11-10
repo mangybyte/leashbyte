@@ -127,7 +127,7 @@ with LeashByteClient() as client:
 
 The client reads `LEASHBYTE_API_KEY` or `LEASHBYTE_API_KEY_FILE`. It doesn't read `LEASHBYTE_API_URL`, so pass `base_url` if the API isn't at the default `http://127.0.0.1:8080`.
 
-The client keeps its configured key out of `repr` and API errors. It can't do the same for your own logging, so keep request bodies, screenshots, page content and run artifacts out of your logs. There's a run example in [`sdk/python/README.md`](https://github.com/mangybyte/leashbyte/blob/main/sdk/python/README.md).
+The client keeps its configured key out of `repr` and API errors. It can't do the same for your own logging, so keep request bodies, screenshots, page content and run artifacts out of your logs. There's a run example in [`sdk/python/README.md`](https://github.com/mangybyte/leashbyte/blob/v0.1.2/sdk/python/README.md).
 
 ## TypeScript SDK
 
@@ -145,7 +145,7 @@ const page = await client.fetchPage({ url: "https://example.com/" });
 console.log(page.status, page.final_url);
 ```
 
-The source lives in `sdk/typescript`. Its [README](https://github.com/mangybyte/leashbyte/blob/main/sdk/typescript/README.md) has more usage details and shows how to build it from the checkout.
+The source lives in `sdk/typescript`. Its [README](https://github.com/mangybyte/leashbyte/blob/v0.1.2/sdk/typescript/README.md) has more usage details and shows how to build it from the checkout.
 
 The client reads `LEASHBYTE_API_KEY` or `LEASHBYTE_API_KEY_FILE`. Pass `baseUrl` to the constructor for a different API address. The configured key is redacted from inspection, JSON serialization and API errors.
 
@@ -381,9 +381,9 @@ The hook runs after the URL, network, robots and rate-limit checks. It receives 
 
 ## Configuration
 
-[`.env.example`](https://github.com/mangybyte/leashbyte/blob/main/.env.example) has the main settings. Every application secret also has a `_FILE` variant for container secrets. The API won't start without an API key, and the vault won't start without a 32-byte master key.
+[`.env.example`](https://github.com/mangybyte/leashbyte/blob/v0.1.2/.env.example) has the main settings. Every application secret also has a `_FILE` variant for container secrets. The API won't start without an API key, and the vault won't start without a 32-byte master key.
 
-The OpenAPI schema is in [`openapi.json`](https://github.com/mangybyte/leashbyte/blob/main/openapi.json).
+The OpenAPI schema is in [`openapi.json`](https://github.com/mangybyte/leashbyte/blob/v0.1.2/openapi.json).
 
 ## Stopping the services
 
@@ -423,15 +423,15 @@ The GitHub Actions workflow runs the same checks. It also starts the Compose sta
 
 ## Documents
 
-- [Architecture and threat model](https://github.com/mangybyte/leashbyte/blob/main/docs/DESIGN.md)
-- [Known limits and next steps](https://github.com/mangybyte/leashbyte/blob/main/docs/ROADMAP.md)
-- [Changelog](https://github.com/mangybyte/leashbyte/blob/main/CHANGELOG.md)
-- [Third-party licences](https://github.com/mangybyte/leashbyte/blob/main/docs/THIRD_PARTY.md)
-- [Python licence inventory](https://github.com/mangybyte/leashbyte/blob/main/docs/python-licenses.json)
-- [JavaScript licence inventory](https://github.com/mangybyte/leashbyte/blob/main/sdk/typescript/THIRD_PARTY_LICENSES.json)
-- [Security policy](https://github.com/mangybyte/leashbyte/blob/main/SECURITY.md)
-- [Contributing](https://github.com/mangybyte/leashbyte/blob/main/CONTRIBUTING.md)
+- [Architecture and threat model](https://github.com/mangybyte/leashbyte/blob/v0.1.2/docs/DESIGN.md)
+- [Known limits and next steps](https://github.com/mangybyte/leashbyte/blob/v0.1.2/docs/ROADMAP.md)
+- [Changelog](https://github.com/mangybyte/leashbyte/blob/v0.1.2/CHANGELOG.md)
+- [Third-party licences](https://github.com/mangybyte/leashbyte/blob/v0.1.2/docs/THIRD_PARTY.md)
+- [Python licence inventory](https://github.com/mangybyte/leashbyte/blob/v0.1.2/docs/python-licenses.json)
+- [JavaScript licence inventory](https://github.com/mangybyte/leashbyte/blob/v0.1.2/sdk/typescript/THIRD_PARTY_LICENSES.json)
+- [Security policy](https://github.com/mangybyte/leashbyte/blob/v0.1.2/SECURITY.md)
+- [Contributing](https://github.com/mangybyte/leashbyte/blob/v0.1.2/CONTRIBUTING.md)
 
 ## Licence
 
-LeashByte is licensed under the [Apache License 2.0](https://github.com/mangybyte/leashbyte/blob/main/LICENSE). Copyright 2026 MangyByte Ltd. See [NOTICE](https://github.com/mangybyte/leashbyte/blob/main/NOTICE) and the [third-party licences](https://github.com/mangybyte/leashbyte/blob/main/docs/THIRD_PARTY.md) for dependency notices.
+LeashByte is licensed under the [Apache License 2.0](https://github.com/mangybyte/leashbyte/blob/v0.1.2/LICENSE). Copyright 2026 MangyByte Ltd. See [NOTICE](https://github.com/mangybyte/leashbyte/blob/v0.1.2/NOTICE) and the [third-party licences](https://github.com/mangybyte/leashbyte/blob/v0.1.2/docs/THIRD_PARTY.md) for dependency notices.

@@ -1,6 +1,6 @@
 [project]
 name = "leashbyte-sdk"
-version = "0.1.1"
+version = "0.1.2"
 description = "Python client for the LeashByte API"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
