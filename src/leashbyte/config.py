@@ -98,8 +98,8 @@ class Settings(BaseSettings):
                     f"LeashByte cannot read the file in {name}_FILE ({reason}). "
                     "Give the user that runs LeashByte read access to it."
                 ) from error
-            except UnicodeDecodeError as error:
-                raise RuntimeError(f"The file in {name}_FILE is not UTF-8 text.") from error
+            except UnicodeDecodeError:
+                raise RuntimeError(f"The file in {name}_FILE is not UTF-8 text.") from None
         elif direct is not None:
             value = direct.get_secret_value().strip()
         if not value:

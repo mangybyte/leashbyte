@@ -395,9 +395,19 @@ async def test_page_text_is_redacted_bounded_and_counted() -> None:
 
     # A secret that crosses the page script's scan cut is only partly present.
     session = SimpleNamespace(redactions=[SECRET])
-    cut, truncated = BrowserPool.bounded_redact(session, "visible " + SECRET[:12], True, 1000)
+    cut, truncated = BrowserPool.bounded_redact(
+        session, ("visible text " * 20) + SECRET[:12], True, 1000, 2000
+    )
+    assert cut.startswith("visible text")
     assert SECRET[:12] not in cut
     assert truncated is True
+    tabbed = SimpleNamespace(redactions=["two\tspaced  secret"])
+    spaced, _ = BrowserPool.bounded_redact(tabbed, "pw two\tspaced  secret end", False, 1000, 2000)
+    assert spaced == "pw [redacted] end"
+    oversized, oversized_cut = BrowserPool.bounded_redact(
+        session, "x" * (PAGE_TEXT_SCAN_LIMIT * 2), False, PAGE_TEXT_LIMIT, PAGE_TEXT_SCAN_LIMIT
+    )
+    assert len(oversized) == PAGE_TEXT_LIMIT and oversized_cut is True
 
     without_text = {"goal": "Complete the controlled goal.", "text": ""}
     with_text = {**without_text, "text": large["text"]}

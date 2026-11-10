@@ -451,7 +451,10 @@ class AgentWorker:
         try:
             self.settings.require_anthropic_api_key()
         except RuntimeError as error:
-            logger.warning("Claude runs are unavailable: %s", error)
+            if isinstance(error.__cause__, OSError):
+                logger.warning("Claude runs are unavailable: %s", error)
+            else:
+                logger.info("Claude runs are off: %s", error)
 
     async def run(self) -> None:
         self.report_claude_key()

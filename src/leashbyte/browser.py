@@ -42,12 +42,7 @@ NODE_NAME_LIMIT = 300
 NODE_NAME_SCAN_LIMIT = 2_000
 PAGE_TEXT_SCRIPT = """limit => {
   const body = document.body;
-  const raw = body ? String(body.innerText || '') : '';
-  const text = raw
-    .replace(/[ \\t\\f\\v\\u00a0]+/g, ' ')
-    .replace(/ *\\n */g, '\\n')
-    .replace(/\\n{3,}/g, '\\n\\n')
-    .trim();
+  const text = body ? String(body.innerText || '') : '';
   return {text: text.slice(0, limit), cut: text.length > limit};
 }"""
 
@@ -312,7 +307,7 @@ class BrowserPool:
 
     @staticmethod
     def bounded_redact(
-        session: Session, value: object, scan_cut: bool, limit: int
+        session: Session, value: object, scan_cut: bool, limit: int, scan_limit: int
     ) -> tuple[str, bool]:
         """Redact page text, then cut it to the limit.
 
@@ -322,6 +317,12 @@ class BrowserPool:
         """
         if not isinstance(value, str):
             return "", False
+        # The page script runs in the page, so do not trust it to have applied the scan limit.
+        if len(value) > scan_limit:
+            value, scan_cut = value[:scan_limit], True
+        value = value.encode("utf-16", "surrogatepass").decode("utf-16", "replace")
+        # Redact before collapsing whitespace, so a secret with a tab or a double space
+        # still matches its stored form.
         redacted = BrowserPool.redact(session, value)
         if scan_cut:
             margin = max(
@@ -333,6 +334,9 @@ class BrowserPool:
                 default=0,
             )
             redacted = redacted[: max(0, len(redacted) - margin)]
+        redacted = re.sub(r"[ \t\f\v\u00a0]+", " ", redacted)
+        redacted = re.sub(r" *\n *", "\n", redacted)
+        redacted = re.sub(r"\n{3,}", "\n\n", redacted).strip()
         return redacted[:limit], scan_cut or len(redacted) > limit
 
     def describe(self, session: Session) -> dict:
@@ -386,7 +390,7 @@ class BrowserPool:
                       const text = String(
                         element.getAttribute('aria-label') || element.innerText ||
                         element.getAttribute('placeholder') || element.getAttribute('name') || ''
-                      ).trim();
+                      );
                       const roles = {
                         a: 'link', button: 'button', input: 'textbox',
                         select: 'combobox', textarea: 'textbox'
@@ -402,7 +406,11 @@ class BrowserPool:
                     NODE_NAME_SCAN_LIMIT,
                 )
                 name, _ = self.bounded_redact(
-                    session, details.pop("name"), bool(details.pop("name_cut")), NODE_NAME_LIMIT
+                    session,
+                    details.pop("name", ""),
+                    details.pop("name_cut", False) is True,
+                    NODE_NAME_LIMIT,
+                    NODE_NAME_SCAN_LIMIT,
                 )
                 mark = len(marks) + 1
                 marks[mark] = element
@@ -416,7 +424,11 @@ class BrowserPool:
         if not isinstance(page_text, dict):
             page_text = {}
         text, text_truncated = self.bounded_redact(
-            session, page_text.get("text"), page_text.get("cut") is True, PAGE_TEXT_LIMIT
+            session,
+            page_text.get("text"),
+            page_text.get("cut") is True,
+            PAGE_TEXT_LIMIT,
+            PAGE_TEXT_SCAN_LIMIT,
         )
         session.marks = marks
         session.latest_snapshot = uuid.uuid4().hex

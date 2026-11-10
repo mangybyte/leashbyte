@@ -291,7 +291,7 @@ chmod 600 "$KEY_FILE"
 setfacl -m u:10001:r--,g::--- "$KEY_FILE"
 ```
 
-If you don't have `setfacl`, `sudo chown 10001 "$KEY_FILE"` with mode `0400` works too. When the worker can't read the key, it logs `Claude runs are unavailable` at start, and every Claude run fails with an error that names `LEASHBYTE_ANTHROPIC_API_KEY_FILE` and the reason, such as `Permission denied`.
+With rootless Docker or Podman, uid 10001 in the container maps to a different uid on the host, so give that uid access instead. If you don't have `setfacl`, `sudo chown 10001 "$KEY_FILE"` with mode `0400` works too. When the worker can't read the key, it logs `Claude runs are unavailable` at start, and every Claude run fails with an error that names `LEASHBYTE_ANTHROPIC_API_KEY_FILE` and the reason, such as `Permission denied`.
 
 Create a run with fixed limits:
 
