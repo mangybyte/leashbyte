@@ -1,6 +1,6 @@
 [project]
 name = "leashbyte"
-version = "0.1.0"
+version = "0.1.1"
 description = "Self-hosted search and page fetch APIs"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
@@ -13,7 +13,7 @@ dependencies = [
   "fastapi>=0.121,<1",
   "httpcore>=1.0.9,<1.1",
   "httpx>=0.28,<1",
-  "leashbyte-sdk",
+  "leashbyte-sdk>=0.1.1,<0.2",
   "mcp>=1.26,<2",
   "playwright>=1.56,<2",
   "pydantic-settings>=2.11,<3",

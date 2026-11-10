@@ -2,13 +2,13 @@
 
 A Python client for the stable LeashByte REST API. The models are generated from `openapi.json`, and a hand-written client on top adds authentication, binary downloads and run polling. It needs Python 3.13.
 
-The PyPI package isn't published yet, so install it straight from GitHub:
+Install it from PyPI:
 
 ```bash
-uv pip install "leashbyte-sdk @ git+https://github.com/mangybyte/leashbyte.git@v0.1.0#subdirectory=sdk/python"
+pip install leashbyte-sdk
 ```
 
-From a checkout of the repository, `uv pip install ./sdk/python` does the same.
+With uv, use `uv add leashbyte-sdk`. From a checkout of the repository, `uv pip install ./sdk/python` installs the copy in your tree.
 
 ```python
 import os

@@ -2,7 +2,7 @@
 
 LeashByte is a self-hosted toolkit that gives AI agents access to the web. It puts search, page fetching, real Chrome sessions, an encrypted credential vault and goal-driven agent runs behind one REST API, with an MCP server and Python and TypeScript SDKs on top. It's meant for developers who want their agents to search, read and use websites from their own machines, driven by a model they choose. A local model works fine.
 
-LeashByte is pre-alpha. Everything in this README runs from a source checkout with Docker Compose, but expect rough edges and breaking changes. The PyPI and npm packages haven't been published yet.
+LeashByte is pre-alpha, so expect rough edges and breaking changes. The services run with Docker Compose from a source checkout. The Python SDK is on PyPI as `leashbyte-sdk`, and the server package as `leashbyte`.
 
 The project home is [leashbyte.com](https://leashbyte.com).
 
@@ -17,14 +17,14 @@ The project home is [leashbyte.com](https://leashbyte.com).
 - Python 3.13 and uv 0.13.4 for the quickstart, the Python SDK and stdio MCP.
 - Node 20 or later for the TypeScript SDK.
 
-### Install from GitHub
+### Get the source
 
 ```bash
 git clone https://github.com/mangybyte/leashbyte.git
 cd leashbyte
 ```
 
-The PyPI and npm packages aren't published yet, so install from this repository. Until they are, a package called `leashbyte` on a registry isn't from this project, and you shouldn't install it.
+The Compose stack builds from this checkout, so start here even if you plan to use the packages. If all you need is a Python client for a stack that's already running, `pip install leashbyte-sdk` is enough.
 
 ### Start the services
 
@@ -103,11 +103,19 @@ For stdio, run `uv sync --locked` and use a client configuration like this one, 
 
 The MCP tools cover search, fetch, browser sessions and runs. Vault management and CDP are left out on purpose: they're operator tasks, and the thing on the other end of an MCP connection is usually a model. To log in to a site, use `fill_secret` with a credential placeholder. Anything a page returns is untrusted data.
 
+If you'd rather not point at a checkout, `pip install leashbyte` puts the `leashbyte-mcp` command on your PATH. Use `"command": "leashbyte-mcp"` with no `args` and the same `env`. It only talks to the REST API, so the Compose stack still has to be running.
+
 `LEASHBYTE_API_KEY_FILE` is for stdio MCP and the SDKs running on the host. The Compose MCP service uses `LEASHBYTE_API_KEY` and doesn't mount the host key file.
 
 ## Python SDK
 
-`leashbyte-sdk` lives in `sdk/python` and covers the stable REST API. `uv sync --locked` installs it. The Pydantic models are generated from `openapi.json`, and a hand-written client on top handles authentication, binary downloads and run polling.
+`leashbyte-sdk` lives in `sdk/python` and covers the stable REST API. Install it from PyPI:
+
+```bash
+pip install leashbyte-sdk
+```
+
+In a checkout, `uv sync --locked` installs it for you. The Pydantic models are generated from `openapi.json`, and a hand-written client on top handles authentication, binary downloads and run polling.
 
 ```python
 from leashbyte_sdk import FetchRequest, LeashByteClient
@@ -119,11 +127,11 @@ with LeashByteClient() as client:
 
 The client reads `LEASHBYTE_API_KEY` or `LEASHBYTE_API_KEY_FILE`. It doesn't read `LEASHBYTE_API_URL`, so pass `base_url` if the API isn't at the default `http://127.0.0.1:8080`.
 
-The client keeps its configured key out of `repr` and API errors. It can't do the same for your own logging, so keep request bodies, screenshots, page content and run artifacts out of your logs. There's a run example in [`sdk/python/README.md`](sdk/python/README.md).
+The client keeps its configured key out of `repr` and API errors. It can't do the same for your own logging, so keep request bodies, screenshots, page content and run artifacts out of your logs. There's a run example in [`sdk/python/README.md`](https://github.com/mangybyte/leashbyte/blob/main/sdk/python/README.md).
 
 ## TypeScript SDK
 
-Build and test the SDK from the checkout:
+The TypeScript SDK lives in `sdk/typescript`. Its [README](https://github.com/mangybyte/leashbyte/blob/main/sdk/typescript/README.md) has the install and usage details. To build it from the checkout:
 
 ```bash
 npm ci --prefix sdk/typescript
@@ -364,9 +372,9 @@ The hook runs after the URL, network, robots and rate-limit checks. It receives 
 
 ## Configuration
 
-[`.env.example`](.env.example) has the main settings. Every application secret also has a `_FILE` variant for container secrets. The API won't start without an API key, and the vault won't start without a 32-byte master key.
+[`.env.example`](https://github.com/mangybyte/leashbyte/blob/main/.env.example) has the main settings. Every application secret also has a `_FILE` variant for container secrets. The API won't start without an API key, and the vault won't start without a 32-byte master key.
 
-The OpenAPI schema is in [`openapi.json`](openapi.json).
+The OpenAPI schema is in [`openapi.json`](https://github.com/mangybyte/leashbyte/blob/main/openapi.json).
 
 ## Stopping the services
 
@@ -406,15 +414,15 @@ The GitHub Actions workflow runs the same checks. It also starts the Compose sta
 
 ## Documents
 
-- [Architecture and threat model](docs/DESIGN.md)
-- [Known limits and next steps](docs/ROADMAP.md)
-- [Changelog](CHANGELOG.md)
-- [Third-party licences](docs/THIRD_PARTY.md)
-- [Python licence inventory](docs/python-licenses.json)
-- [JavaScript licence inventory](sdk/typescript/THIRD_PARTY_LICENSES.json)
-- [Security policy](SECURITY.md)
-- [Contributing](CONTRIBUTING.md)
+- [Architecture and threat model](https://github.com/mangybyte/leashbyte/blob/main/docs/DESIGN.md)
+- [Known limits and next steps](https://github.com/mangybyte/leashbyte/blob/main/docs/ROADMAP.md)
+- [Changelog](https://github.com/mangybyte/leashbyte/blob/main/CHANGELOG.md)
+- [Third-party licences](https://github.com/mangybyte/leashbyte/blob/main/docs/THIRD_PARTY.md)
+- [Python licence inventory](https://github.com/mangybyte/leashbyte/blob/main/docs/python-licenses.json)
+- [JavaScript licence inventory](https://github.com/mangybyte/leashbyte/blob/main/sdk/typescript/THIRD_PARTY_LICENSES.json)
+- [Security policy](https://github.com/mangybyte/leashbyte/blob/main/SECURITY.md)
+- [Contributing](https://github.com/mangybyte/leashbyte/blob/main/CONTRIBUTING.md)
 
 ## Licence
 
-LeashByte is licensed under the [Apache License 2.0](LICENSE). Copyright 2026 MangyByte Ltd. See [NOTICE](NOTICE) and the [third-party licences](docs/THIRD_PARTY.md) for dependency notices.
+LeashByte is licensed under the [Apache License 2.0](https://github.com/mangybyte/leashbyte/blob/main/LICENSE). Copyright 2026 MangyByte Ltd. See [NOTICE](https://github.com/mangybyte/leashbyte/blob/main/NOTICE) and the [third-party licences](https://github.com/mangybyte/leashbyte/blob/main/docs/THIRD_PARTY.md) for dependency notices.

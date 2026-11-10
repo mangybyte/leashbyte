@@ -752,6 +752,10 @@ main,
   color: #c7f56a;
 }
 
+.quickstart-note code {
+  color: #c7f56a;
+}
+
 .section-heading.compact {
   margin-bottom: 36px;
 }

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.1 - 2026-11-10
+
+The first release on PyPI, as `leashbyte` and `leashbyte-sdk`. 0.1.0 was a GitHub-only release and was never uploaded to a package registry. There are no code changes.
+
+### Changed
+
+- The READMEs and the project site now give the PyPI install lines.
+- `leashbyte` now requires `leashbyte-sdk>=0.1.1,<0.2`. Before, it accepted any version.
+
 ## 0.1.0 - 2026-11-10
 
 First public source release.
