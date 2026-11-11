@@ -48,6 +48,8 @@ The Compose stack builds from this checkout, so start here even if you plan to u
    docker compose up --build -d --wait
    ```
 
+Every service in the default stack has `restart: unless-stopped`, so the stack comes back by itself after Docker or the host restarts. A service you stop with `docker compose stop` stays stopped. On that kind of restart Docker doesn't wait for `depends_on`, so the services can come up in any order: the API and the MCP server connect to their dependencies on each request, and the agent worker exits and is restarted until PostgreSQL is ready.
+
 Only the API and the MCP server get host ports, and both bind to `127.0.0.1` by default. SearXNG, the browser pool, the vault, the agent worker and PostgreSQL stay on the internal Compose network with no host ports. Leave the bind addresses as they are unless you've put TLS and access control in front of them.
 
 The browser image installs Google Chrome during the first build. Chrome runs as a non-root user inside the browser container, and every session gets its own profile directory and a time lease.

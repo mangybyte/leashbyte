@@ -18,6 +18,7 @@ services:
       context: .
       target: runtime
     container_name: leashbyte-api
+    restart: unless-stopped
     environment:
       LEASHBYTE_API_KEY: ${LEASHBYTE_API_KEY:-}
       LEASHBYTE_API_KEY_FILE: ${LEASHBYTE_API_KEY_FILE:-}
@@ -77,6 +78,7 @@ services:
       context: .
       target: runtime
     container_name: leashbyte-mcp
+    restart: unless-stopped
     environment:
       LEASHBYTE_API_URL: http://api:8080
       LEASHBYTE_API_KEY: ${LEASHBYTE_API_KEY:-}
@@ -108,6 +110,7 @@ services:
       context: .
       target: browser
     container_name: leashbyte-browser-pool
+    restart: unless-stopped
     init: true
     environment:
       HOME: /tmp
@@ -157,6 +160,7 @@ services:
       context: .
       target: runtime
     container_name: leashbyte-vault
+    restart: unless-stopped
     environment:
       LEASHBYTE_VAULT_MANAGE_KEY: ${LEASHBYTE_VAULT_MANAGE_KEY:-}
       LEASHBYTE_VAULT_MANAGE_KEY_FILE: ${LEASHBYTE_VAULT_MANAGE_KEY_FILE:-}
@@ -265,6 +269,7 @@ services:
   run-store:
     image: postgres:17.6-alpine
     container_name: leashbyte-run-store
+    restart: unless-stopped
     environment:
       POSTGRES_USER: leashbyte
       POSTGRES_PASSWORD: ${LEASHBYTE_POSTGRES_PASSWORD:?Set LEASHBYTE_POSTGRES_PASSWORD in .env}
@@ -299,6 +304,7 @@ services:
   searxng:
     image: searxng/searxng@sha256:c750ee1d859b26d3aeae51c07f6a48c3a0bfbaa9195d71a18b258862d88c4c3c
     container_name: leashbyte-searxng
+    restart: unless-stopped
     user: "977:977"
     configs:
       - source: searxng_settings
