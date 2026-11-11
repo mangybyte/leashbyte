@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.3 - 2026-11-11
+
+The whole stack now comes back after a reboot.
+
+### Fixed
+
+- Every service in the default `compose.yaml` stack has `restart: unless-stopped`. Before, only the agent worker and the model relay had a restart policy, so after Docker or the host restarted, the API, the MCP server, the browser pool, the vault, PostgreSQL and SearXNG stayed down until you started them by hand. A service you stop yourself still stays stopped.
+
+### Notes
+
+- Docker doesn't apply `depends_on` when it restarts containers, so the services can start in any order. The API and the MCP server connect to their dependencies on each request, and the agent worker exits and is restarted until PostgreSQL is ready, so the stack settles by itself.
+- There are no code changes. The Python and TypeScript SDKs get the new version number only, to keep all the packages in step.
+
 ## 0.1.2 - 2026-11-10
 
 Agents can now read the page they are on.

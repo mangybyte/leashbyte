@@ -45,6 +45,6 @@ npm test
 npm run licenses
 ```
 
-The build writes the package to `dist/src`. To build exactly this version, check out the `v0.1.2` tag. It has the same SDK code as this package.
+The build writes the package to `dist/src`. To build exactly this version, check out the `v0.1.3` tag. It has the same SDK code as this package.
 
 `npm run licenses` checks the development dependencies and writes `THIRD_PARTY_LICENSES.json`. The schema types are generated from `openapi.json` at the repository root, so run `npm run generate` whenever that file changes.
