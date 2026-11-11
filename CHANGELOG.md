@@ -11,6 +11,7 @@ The whole stack now comes back after a reboot.
 ### Notes
 
 - Docker doesn't apply `depends_on` when it restarts containers, so the services can start in any order. The API and the MCP server connect to their dependencies on each request, and the agent worker exits and is restarted until PostgreSQL is ready, so the stack settles by itself.
+- A `git pull` alone doesn't change a running stack. Run `docker compose up -d` again and Compose recreates the containers with the new policy. A stack you brought up once to try LeashByte will now start at every boot too, so take it down with `docker compose down` if you don't want that.
 - There are no code changes. The Python and TypeScript SDKs get the new version number only, to keep all the packages in step.
 
 ## 0.1.2 - 2026-11-10
